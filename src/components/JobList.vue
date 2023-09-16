@@ -172,7 +172,7 @@ button {
 }
 
 button:hover {
-  background-color: #002f60;
+  background-color: rgb(0, 0, 55); /* Dark navy background color on hover */
 }
 
 </style>

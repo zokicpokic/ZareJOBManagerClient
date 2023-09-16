@@ -56,9 +56,10 @@ Copy code
         <option v-if="selectedJob && selectedJob.status_name" :value="selectedJob.status_id">{{ selectedJob.status_name }}</option>
       </select>
     </div>
-      <div>
-        <button type="submit" class="custom-button">{{ selectedJob ? 'Update Job' : 'Add Job' }}</button>
-      </div>
+    <div class="button-container" style="display: flex; justify-content: space-between;">
+      <button type="submit" class="custom-button">{{ selectedJob ? 'Update Job' : 'Add Job' }}</button>
+      <button @click="dismissModal" class="close-button">Close</button>
+    </div>
     </form>
     <CustomAlert
       v-if="showAlert"
@@ -304,5 +305,23 @@ button {
   position: relative; /* This makes it a reference point for absolutely positioned children */
   padding-top: 0px; /* This provides space for the close button and some additional padding */
 }
+
+.close-button {
+  float: right;
+  background-color: rgb(172, 0, 0); /* Red background color */
+  color: white; /* White text color */
+  border: none; /* Remove any border */
+  padding: 10px 20px; /* Provide some padding */
+  cursor: pointer; /* Add a pointer cursor on hover */
+  font-weight: bold; /* Make the text bold */
+}
+.custom-button:hover {
+  background-color: rgb(0, 0, 55); /* Dark navy background color on hover */
+}
+
+.close-button:hover {
+  background-color: rgb(105, 2, 2); /* Dark red background color on hover */
+}
+
 
 </style>
