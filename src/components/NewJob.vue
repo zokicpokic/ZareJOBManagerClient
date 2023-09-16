@@ -122,6 +122,7 @@ export default {
         });
 
         if (response.ok) {
+          this.$emit('jobAdded'); // Emit an event named "jobAdded"
           const data = await response.json();
           console.log('New job ID:', data.jobid);
           this.jobName = '';

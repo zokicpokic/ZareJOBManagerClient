@@ -7,7 +7,7 @@
       <!-- Modal Content -->
       <div class="modal">
         <!-- Pass selectedJob as a prop to NewJobModal -->
-        <NewJobModal :selectedJob="selectedJob" @close="closeNewJobModal" />
+        <NewJobModal :selectedJob="selectedJob" @close="closeNewJobModal" @jobAdded="refreshJobsList"/>
       </div>
     </div>
     <table>
@@ -54,6 +54,10 @@ export default {
     this.fetchJobs();
   },
   methods: {
+    refreshJobsList() {
+        // logic to fetch and refresh the list of jobs goes here
+        this.fetchJobs();
+    },
     openNewJobModal() {
       this.showModal = true; // Show the modal when the "Add Job" button is clicked
     },
