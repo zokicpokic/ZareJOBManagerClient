@@ -20,28 +20,39 @@ Copy code
         <label for="operaterName">Operator Name:</label>
         <input type="text" id="operaterName" v-model="operaterName" required>
       </div>
+      <!-- PRN Dropdowns -->
       <div v-for="index in 5" :key="index">
         <label :for="`prnSelect${index}`">PRN{{ index }}:</label>
         <select :id="`prnSelect${index}`" v-model="selectedPrn[index - 1]" required>
-            <option v-for="prn in codeOptions" :key="prn.id" :value="prn.id">{{ prn.code_name }}</option>
+            <!-- Check if selectedJob exists and if it does, only show the matched PRN, otherwise show the "Select PRN" option -->
+            <option v-if="!selectedJob" disabled value="">Select PRN</option>
+            <option v-for="prn in codeOptions" :key="prn.id" :value="prn.id">{{ prn.name ? prn.name : prn.code_name }}</option>
+            <!-- If selectedJob exists and has the current PRN value, show it -->
+            <option v-if="selectedJob && selectedJob[`prn${index}_name`]" :value="selectedJob[`prn${index}_id`]">{{ selectedJob[`prn${index}_name`] }}</option>
         </select>
       </div>
+
+      <!-- KOV Dropdowns -->
       <div v-for="index in 4" :key="index">
         <label :for="`kovSelect${index}`">KOV{{ index }}:</label>
         <select :id="`kovSelect${index}`" v-model="selectedKov[index - 1]" required>
-            <option v-for="kov in codeOptions" :key="kov.id" :value="kov.id">{{ kov.code_name }}</option>
+            <option v-for="kov in codeOptions" :key="kov.id" :value="kov.id">{{ kov.name ? kov.name : kov.code_name }}</option>
         </select>
       </div>
+
+      <!-- Material Dropdown -->
       <div>
         <label for="materialSelect">Material:</label>
         <select id="materialSelect" v-model="selectedMaterial" required>
-          <option v-for="material in materialOptions" :key="material.id" :value="material.id">{{ material.material_name }}</option>
+          <option v-for="material in materialOptions" :key="material.id" :value="material.id">{{ material.name ? material.name : material.material_name }}</option>
         </select>
       </div>
+
+      <!-- Status Dropdown -->
       <div>
         <label for="statusSelect">Status:</label>
         <select id="statusSelect" v-model="selectedStatus" required>
-          <option v-for="status in statusOptions" :key="status.id" :value="status.id">{{ status.status_name }}</option>
+          <option v-for="status in statusOptions" :key="status.id" :value="status.id">{{ status.name ? status.name : status.status_name }}</option>
         </select>
       </div>
       <div>
@@ -172,6 +183,7 @@ export default {
         }
         // Set dataLoaded to true when data is successfully loaded
         this.dataLoaded = true;
+        this.populateFromSelectedJob();
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -193,11 +205,11 @@ export default {
         this.clientName = this.selectedJob.client_name;
         this.operaterName = this.selectedJob.operater_name;
         for (let i = 0; i < 5; i++) {
-          this.selectedPrn[i] = this.selectedJob[`prn${i + 1}`] || '';
+          this.selectedPrn[i] = this.selectedJob[`Prn${i + 1}`] || '';
         }
 
         for (let i = 0; i < 4; i++) {
-          this.selectedKov[i] = this.selectedJob[`kov${i + 1}`] || '';
+          this.selectedKov[i] = this.selectedJob[`Kov${i + 1}`] || '';
         }
 
         this.selectedMaterial = this.selectedJob.material_id;
