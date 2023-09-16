@@ -25,10 +25,7 @@ Copy code
         <label :for="`prnSelect${index}`">PRN{{ index }}:</label>
         <select :id="`prnSelect${index}`" v-model="selectedPrn[index - 1]" required>
             <!-- Check if selectedJob exists and if it does, only show the matched PRN, otherwise show the "Select PRN" option -->
-            <option v-if="!selectedJob" disabled value="">Select PRN</option>
             <option v-for="prn in codeOptions" :key="prn.id" :value="prn.id">{{ prn.name ? prn.name : prn.code_name }}</option>
-            <!-- If selectedJob exists and has the current PRN value, show it -->
-            <option v-if="selectedJob && selectedJob[`prn${index}_name`]" :value="selectedJob[`prn${index}_id`]">{{ selectedJob[`prn${index}_name`] }}</option>
         </select>
       </div>
 
@@ -40,21 +37,25 @@ Copy code
         </select>
       </div>
 
-      <!-- Material Dropdown -->
-      <div>
-        <label for="materialSelect">Material:</label>
-        <select id="materialSelect" v-model="selectedMaterial" required>
-          <option v-for="material in materialOptions" :key="material.id" :value="material.id">{{ material.name ? material.name : material.material_name }}</option>
-        </select>
-      </div>
+    <!-- Material Dropdown -->
+    <div>
+      <label for="materialSelect">Material:</label>
+      <select id="materialSelect" v-model="selectedMaterial" required>
+        <option v-if="!selectedJob" disabled value="">Select Material</option>
+        <option v-for="material in materialOptions" :key="material.id" :value="material.id">{{ material.name ? material.name : material.material_name }}</option>
+        <option v-if="selectedJob && selectedJob.material_name" :value="selectedJob.material_id">{{ selectedJob.material_name }}</option>
+      </select>
+    </div>
 
-      <!-- Status Dropdown -->
-      <div>
-        <label for="statusSelect">Status:</label>
-        <select id="statusSelect" v-model="selectedStatus" required>
-          <option v-for="status in statusOptions" :key="status.id" :value="status.id">{{ status.name ? status.name : status.status_name }}</option>
-        </select>
-      </div>
+    <!-- Status Dropdown -->
+    <div>
+      <label for="statusSelect">Status:</label>
+      <select id="statusSelect" v-model="selectedStatus" required>
+        <option v-if="!selectedJob" disabled value="">Select Status</option>
+        <option v-for="status in statusOptions" :key="status.id" :value="status.id">{{ status.name ? status.name : status.status_name }}</option>
+        <option v-if="selectedJob && selectedJob.status_name" :value="selectedJob.status_id">{{ selectedJob.status_name }}</option>
+      </select>
+    </div>
       <div>
         <button type="submit" class="custom-button">{{ selectedJob ? 'Update Job' : 'Add Job' }}</button>
       </div>
@@ -212,8 +213,8 @@ export default {
           this.selectedKov[i] = this.selectedJob[`Kov${i + 1}`] || '';
         }
 
-        this.selectedMaterial = this.selectedJob.material_id;
-        this.selectedStatus = this.selectedJob.status_id;
+        this.selectedMaterial = this.selectedJob.material_name ? this.selectedJob.material_id : null;
+        this.selectedStatus = this.selectedJob.status_name ? this.selectedJob.status_id : null;
       }
     }
   },
