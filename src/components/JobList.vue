@@ -1,36 +1,38 @@
 <template>
   <div>
     <h1>Job List</h1>
-    <button @click="openNewJobModal">Add Job</button>
-    <!-- Modal Overlay -->
-    <div class="modal-overlay" v-if="showModal">
-      <!-- Modal Content -->
-      <div class="modal">
-        <!-- Pass selectedJob as a prop to NewJobModal -->
-        <NewJobModal :selectedJob="selectedJob" @close="closeNewJobModal" @jobAdded="refreshJobsList"/>
+    <div class="table-container">
+      <button @click="openNewJobModal">Add Job</button>
+      <!-- Modal Overlay -->
+      <div class="modal-overlay" v-if="showModal">
+        <!-- Modal Content -->
+        <div class="modal">
+          <!-- Pass selectedJob as a prop to NewJobModal -->
+          <NewJobModal :selectedJob="selectedJob" @close="closeNewJobModal" @jobAdded="refreshJobsList"/>
+        </div>
       </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Job Name</th>
+            <th>Job Date</th>
+            <th>Client Name</th>
+            <th>Operator Name</th>
+            <th>Status Name</th> <!-- Display Status Name -->
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Iterate through jobs and display them in rows -->
+          <tr v-for="job in jobs" :key="job.jobid" @click="openJobModal(job)">
+            <td>{{ job.job_name }}</td>
+            <td>{{ job.job_date }}</td>
+            <td>{{ job.client_name }}</td>
+            <td>{{ job.operater_name }}</td>
+            <td>{{ job.status_name }}</td> <!-- Display Status Name -->
+          </tr>
+        </tbody>
+      </table>
     </div>
-    <table>
-      <thead>
-        <tr>
-          <th>Job Name</th>
-          <th>Job Date</th>
-          <th>Client Name</th>
-          <th>Operator Name</th>
-          <th>Status Name</th> <!-- Display Status Name -->
-        </tr>
-      </thead>
-      <tbody>
-        <!-- Iterate through jobs and display them in rows -->
-        <tr v-for="job in jobs" :key="job.jobid" @click="openJobModal(job)">
-          <td>{{ job.job_name }}</td>
-          <td>{{ job.job_date }}</td>
-          <td>{{ job.client_name }}</td>
-          <td>{{ job.operater_name }}</td>
-          <td>{{ job.status_name }}</td> <!-- Display Status Name -->
-        </tr>
-      </tbody>
-    </table>
   </div>
 </template>
 
@@ -112,6 +114,11 @@ export default {
   z-index: 1000; /* Ensure the modal is above the overlay */
 }
 
+.table-container {
+  width: 90%; /* the same as the table's width */
+  margin: 0 auto; /* center the container on the page */
+}
+
 table {
   width: 100%;
   border-collapse: collapse;
@@ -146,6 +153,28 @@ tr:hover {
 .table-row {
   cursor: pointer; /* Show a pointer cursor on hover to indicate clickability */
 }
+
+h1 {
+  text-align: center;
+  color: navy;
+}
+
+button {
+  background-color: navy;
+  color: white;
+  font-weight: bold;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-bottom: 15px;
+  transition: background-color 0.3s;
+}
+
+button:hover {
+  background-color: #002f60;
+}
+
 </style>
   
   
