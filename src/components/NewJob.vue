@@ -1,6 +1,7 @@
 Copy code
 <template>
-  <div>
+  <div class="new-job-container">
+    <button @click="dismissModal" class="close-button">×</button>
     <h1>New Job</h1>
     <!-- Use a v-if condition to render the form when data is available -->
     <form @submit.prevent="addJob" v-if="dataLoaded">
@@ -299,4 +300,30 @@ select {
 button {
   margin-top: 10px; /* Add space between the last form element and the button */
 }
+
+.new-job-container {
+  position: relative; /* This makes it a reference point for absolutely positioned children */
+  padding-top: 10px; /* This provides space for the close button and some additional padding */
+}
+
+.close-button {
+  position: absolute; /* This takes the button out of the normal flow and positions it relative to .new-job-container */
+  top: 10px; /* This positions the button 10px from the top of .new-job-container */
+  right: 10px; /* This positions the button 10px from the right of .new-job-container */
+  background-color: rgb(145, 224, 226); /* This makes the button background red; you can adjust to fit your design */
+  color: white; /* This makes the button text white */
+  border: none; /* This removes the button border */
+  border-radius: 50%; /* This makes the button circular */
+  width: 30px; /* This sets the button width */
+  height: 30px; /* This sets the button height */
+  font-size: 18px; /* This sets the button text size */
+  cursor: pointer; /* This shows a hand cursor when hovering over the button */
+  font-weight: bold; /* This makes the button text bold */
+  outline: none; /* This removes the focus outline; be cautious with accessibility */
+}
+
+.close-button:hover {
+  background-color: rgb(0, 0, 139); /* This darkens the button background on hover */
+}
+
 </style>
