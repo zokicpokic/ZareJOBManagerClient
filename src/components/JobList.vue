@@ -62,6 +62,7 @@ export default {
       this.showModal = true; // Show the modal when the "Add Job" button is clicked
     },
     closeNewJobModal() {
+      this.selectedJob = null
       this.showModal = false; // Close the modal when needed (e.g., after form submission or cancel)
     },
     openJobModal(job) {
