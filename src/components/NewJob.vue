@@ -48,16 +48,16 @@ Copy code
     </div>
 
     <!-- Status Dropdown -->
-    <div>
+    <!--<div>
       <label for="statusSelect">Status:</label>
       <select id="statusSelect" v-model="selectedStatus" required>
         <option v-if="!selectedJob" disabled value="">Select Status</option>
         <option v-for="status in statusOptions" :key="status.id" :value="status.id">{{ status.name ? status.name : status.status_name }}</option>
         <option v-if="selectedJob && selectedJob.status_name" :value="selectedJob.status_id">{{ selectedJob.status_name }}</option>
       </select>
-    </div>
+    </div>-->
     <div class="button-container" style="display: flex; justify-content: space-between;">
-      <button type="submit" class="custom-button">{{ selectedJob ? 'Update Job' : 'Add Job' }}</button>
+      <button type="submit" class="custom-button" :class="{disabled: selectedJob && selectedJob.status_name === 'Finished'}" :disabled="selectedJob && selectedJob.status_name === 'Finished'">{{ selectedJob ? selectedJob.status_name === 'Created' ? 'Start Job' : 'Stop Job' : 'Add Job' }}</button>
       <button @click="dismissModal" class="close-button">Close</button>
     </div>
     </form>
@@ -113,6 +113,17 @@ export default {
         const kov3 = this.selectedKov[2];
         const kov4 = this.selectedKov[3];
 
+        const statDef = this.statusOptions.find(item => item.status_name === 'Created')
+
+        // stst curr 
+        let statCurr = (this.selectedJob) ? this.statusOptions.find(item => item.status_name === this.selectedJob.status_name) : null;
+        if (statCurr && statCurr.status_name === 'Created'){
+          statCurr = this.statusOptions.find(item => item.status_name === 'Running');
+
+        } else if (statCurr && statCurr.status_name === 'Running') {
+          statCurr = this.statusOptions.find(item => item.status_name === 'Finished');
+        }
+        //
         let response;
         if (this.selectedJob) {
             response = await fetch(`${apiUrl}/jobs/${this.selectedJob.jobid}`, {
@@ -135,7 +146,7 @@ export default {
               kov3: kov3,
               kov4: kov4,
               material_id: (this.selectedMaterial) ? this.selectedMaterial : this.selectedJob.materialid,
-              status_id: (this.selectedStatus) ? this.selectedStatus : this.selectedJob.statusid,
+              status_id: (statCurr) ? statCurr.id : this.selectedJob.statusid,
             }),
           });
         } else {
@@ -159,7 +170,7 @@ export default {
             kov3: kov3,
             kov4: kov4,
             material_id: this.selectedMaterial,
-            status_id: this.selectedStatus,
+            status_id: statDef.id,
           }),
         });
         }
@@ -177,8 +188,8 @@ export default {
           this.selectedMaterial = null; // Reset material selection
           this.selectedStatus = null; // Reset status selection
           // Show a custom success alert
-          this.alertHeading = "Job Added Successfully";
-          this.alertMessage = "The job has been added successfully.";
+          this.alertHeading = this.selectedJob ? "Job Updated Successfully" : "Job Added Successfully";
+          this.alertMessage = this.selectedJob ? "The job has been updated successfully." : "The job has been added successfully.";
           this.showAlert = true;       
           // Dismiss the modal
          //this.dismissModal();
@@ -197,11 +208,11 @@ export default {
     },
     async fetchData() {
       try {
-        process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+        //process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
         const responseCodes = await fetch(apiUrl + '/codes');
         const responseMaterials = await fetch(apiUrl + '/materials');
         const responseStatuses = await fetch(apiUrl + '/statuses');
-        process.env.NODE_TLS_REJECT_UNAUTHORIZED = '1';
+        //process.env.NODE_TLS_REJECT_UNAUTHORIZED = '1';
         if (responseCodes.ok) {
           this.codeOptions = await responseCodes.json();
         }
@@ -226,7 +237,7 @@ export default {
     },
     dismissAlert() {
       this.showAlert = false; // Hide the custom alert
-      if (this.alertHeading === "Job Added Successfully") {
+      if (this.alertHeading !== "Error Adding Job") {
         this.dismissModal(); // Close the modal if it was a success alert
       }
     },
@@ -355,5 +366,8 @@ button {
   background-color: rgb(105, 2, 2); /* Dark red background color on hover */
 }
 
-
+.disabled {
+    background-color: gray !important; /* The grayed out background color */
+    cursor: not-allowed !important;
+}
 </style>
