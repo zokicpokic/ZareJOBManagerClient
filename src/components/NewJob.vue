@@ -1,7 +1,7 @@
 Copy code
 <template>
   <div class="new-job-container">
-    <h1>New Job</h1>
+    <h1>{{header}}</h1>
     <!-- Use a v-if condition to render the form when data is available -->
     <form @submit.prevent="addJob" v-if="dataLoaded">
       <div>
@@ -97,6 +97,7 @@ export default {
       alertHeading: "",
       alertMessage: "",
       dataLoaded: false, // Add a data property to track if data is loaded
+      header: 'New Job'
     };
   },
   methods: {
@@ -230,6 +231,7 @@ export default {
       }
     },
     populateFromSelectedJob() {
+      this.header = (this.selectedJob) ? this.selectedJob.job_name : 'New Job'
       if (this.selectedJob) {
         this.jobName = this.selectedJob.job_name;
         const utcDate = moment.utc(this.selectedJob.job_date);
