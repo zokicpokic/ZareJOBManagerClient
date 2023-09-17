@@ -133,8 +133,8 @@ export default {
               kov2: kov2,
               kov3: kov3,
               kov4: kov4,
-              material_id: this.selectedMaterial,
-              status_id: this.selectedStatus,
+              material_id: (this.selectedMaterial) ? this.selectedMaterial : this.selectedJob.materialid,
+              status_id: (this.selectedStatus) ? this.selectedStatus : this.selectedJob.statusid,
             }),
           });
         } else {
