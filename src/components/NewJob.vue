@@ -71,6 +71,7 @@ Copy code
 </template>
 
 <script>
+const moment = require('moment');
 const apiUrl = 'https://89.216.103.191:3000';// production
 //const apiUrl = 'https://192.168.50.251:3000';// dev
 import CustomAlert from "@/components/CustomAlert.vue"; // Import your custom alert component
@@ -110,7 +111,34 @@ export default {
         const kov2 = this.selectedKov[1];
         const kov3 = this.selectedKov[2];
         const kov4 = this.selectedKov[3];
-        const response = await fetch(apiUrl +'/jobs', {
+
+        let response;
+        if (this.selectedJob) {
+            response = await fetch(`${apiUrl}/jobs/${this.selectedJob.jobid}`, {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              job_name: this.jobName,
+              job_date: this.jobDate,
+              client_name: this.clientName,
+              operater_name: this.operaterName,
+              prn1: prn1,
+              prn2: prn2,
+              prn3: prn3,
+              prn4: prn4,
+              prn5: prn5,
+              kov1: kov1,
+              kov2: kov2,
+              kov3: kov3,
+              kov4: kov4,
+              material_id: this.selectedMaterial,
+              status_id: this.selectedStatus,
+            }),
+          });
+        } else {
+          response = await fetch(apiUrl +'/jobs', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -133,11 +161,12 @@ export default {
             status_id: this.selectedStatus,
           }),
         });
+        }
 
         if (response.ok) {
           this.$emit('jobAdded'); // Emit an event named "jobAdded"
-          const data = await response.json();
-          console.log('New job ID:', data.jobid);
+          /*const data = await response.json();
+          console.log('New job ID:', data.jobid);*/
           this.jobName = '';
           this.jobDate = '';
           this.clientName = '';
@@ -203,7 +232,8 @@ export default {
     populateFromSelectedJob() {
       if (this.selectedJob) {
         this.jobName = this.selectedJob.job_name;
-        this.jobDate = this.selectedJob.job_date;
+        const utcDate = moment.utc(this.selectedJob.job_date);
+        this.jobDate = utcDate.format('YYYY-MM-DD');
         this.clientName = this.selectedJob.client_name;
         this.operaterName = this.selectedJob.operater_name;
         for (let i = 0; i < 5; i++) {
