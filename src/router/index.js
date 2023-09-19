@@ -1,18 +1,23 @@
-import { createRouter, createWebHistory } from 'vue-router';
+import { createRouter, createWebHashHistory } from 'vue-router';
 import JobList from '../components/JobList.vue';
+import UserLogin from '../components/UserLogin.vue';
 
 const routes = [
   {
     path: '/',
-    name: 'JobList', // Give it a name for reference
-    component: JobList, // Use your New Job component
+    name: 'UserLogin',
+    component: UserLogin
+  },
+  {
+    path: '/jobs',
+    name: 'JobList',
+    component: JobList
   }
-  // Add other routes if needed
 ];
 
 const router = createRouter({
-  history: createWebHistory(),
-  //base: '/jobmanager/', // production
+  history: createWebHashHistory(),
+ //base: '/jobmanager/', // production
   routes
 });
 
