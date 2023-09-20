@@ -48,4 +48,7 @@
     .login-button {
         cursor: pointer;
     }
+    .login-input {
+        font-size: 16px;
+    }
   </style>

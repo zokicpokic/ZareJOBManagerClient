@@ -117,6 +117,7 @@ export default {
 .table-container {
   width: 90%; /* the same as the table's width */
   margin: 0 auto; /* center the container on the page */
+  overflow-x: auto; /* Add horizontal scrolling */
 }
 
 table {
