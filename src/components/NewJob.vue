@@ -72,8 +72,8 @@ Copy code
 
 <script>
 const moment = require('moment');
-const apiUrl = 'https://89.216.103.191:3000';// production
-//const apiUrl = 'https://192.168.50.251:3000';// dev
+//const apiUrl = 'https://89.216.103.191:3000';// production
+const apiUrl = 'https:/localhost:3000';// dev
 import CustomAlert from "@/components/CustomAlert.vue"; // Import your custom alert component
 
 export default {

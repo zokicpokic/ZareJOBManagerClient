@@ -38,7 +38,8 @@
 
 <script>
 import NewJobModal from "@/components/NewJob.vue"; // Import your modal component
-const apiUrl = 'https://89.216.103.191:3000'; // production
+//const apiUrl = 'https://89.216.103.191:3000';// production
+const apiUrl = 'https://localhost:3000';// dev
 
 export default {
   data() {
