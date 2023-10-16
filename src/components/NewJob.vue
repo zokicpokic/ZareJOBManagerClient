@@ -46,15 +46,14 @@
       </div>
       <div class="job-item">
         <label>Qty listova</label>
-        <input type="text" />
+        <input type="text" v-model="selectedJob.qty_lists" />
         <label>Qty stranica</label>
-        <input type="text" />
+        <input type="text" v-model="selectedJob.qty_pages" />
         <label>Qty koverata</label>
-        <input type="text" />
+        <input type="text" v-model="selectedJob.qty_envelope" />
         <label>Kutija kom.:</label>
-        <input type="text" />
+        <input type="text" v-model="selectedJob.qty_boxes" />
       </div>
-      <!-- ... -->
     </div>
     
     <div class="operators">

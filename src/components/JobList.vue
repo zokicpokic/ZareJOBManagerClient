@@ -1,8 +1,8 @@
 <template>
   <div>
-    <h1>Job List</h1>
+    <h1>Job Lista</h1>
     <div class="table-container">
-      <button @click="openNewJobModal">Add Job</button>
+      <button @click="openNewJobModal">Dodaj Job</button>
       <!-- Modal Overlay -->
       <div class="modal-overlay" v-if="showModal">
         <!-- Modal Content -->
@@ -14,19 +14,25 @@
       <table>
         <thead>
           <tr>
-            <th>Client ID</th>
-            <th>Operator ID</th>
-            <th>Job Date</th>
-            <th>Status ID</th>
+            <th>Klijent</th>
+            <th>Operater</th>
+            <th>Datum</th>
+            <th>START</th>
+            <th>END</th>
+            <th>TIME Total</th>
+            <th>Status</th>
           </tr>
         </thead>
         <tbody>
           <!-- Iterate through jobs from the store and display them in rows -->
           <tr v-for="job in jobs" :key="job.jobid" @click="openJobModal(job)">
-            <td>{{ job.client_id }}</td>
-            <td>{{ job.operater_id }}</td>
-            <td>{{ job.job_date }}</td>
-            <td>{{ job.status_id }}</td>
+            <td>{{ getClientName(job.client_id) }}</td>
+            <td>{{ getOperaterName(job.operater_id) }}</td>
+            <td>{{ formatDate(job.job_date) }}</td>
+            <td>{{ formatTime(job.start_time) }}</td>
+            <td>{{ formatTime(job.end_time) }}</td>
+            <td>{{ calculateTimeTotal(job.start_time, job.end_time) }}</td>
+            <td>{{ getStatusName(job.status_id) }}</td>
           </tr>
         </tbody>
       </table>
@@ -44,15 +50,81 @@ import { useCodeTablesStore } from "@/store"; // Import your Pinia store
 
 export default {
   setup() {
-    const store = useCodeTablesStore(); // Initialize the store
-
-    // Use computed properties to access store state and getters
+    const store = useCodeTablesStore();
     const jobs = computed(() => store.jobs);
-    const selectedJob = computed(() => store.selectedJob);
+
+    // Define a computed property to map client_id to client_name
+    const getClientName = (client_id) => {
+      const client = store.clients.find((c) => c.id === client_id);
+      return client ? client.client_name : ''; // Return the client_name or an empty string
+    };
+
+    // Define a computed property to map operater_id to username
+    const getOperaterName = (operater_id) => {
+      const user = store.users.find((u) => u.id === operater_id);
+      return user ? user.username : ''; // Return the client_name or an empty string
+    };
+
+    // Define a computed property to map status_id to status_name
+    const getStatusName = (status_id) => {
+      const status = store.statuses.find((s) => s.id === status_id);
+      return status ? status.status_name : ''; // Return the client_name or an empty string
+    };
+
+    // Define a method to format the date as "DD.MM."
+    const formatDate = (dateString) => {
+      const date = new Date(dateString);
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+      return `${day}.${month}.${year}`;
+    };
+
+    // Define a method to format the time as "hh:mm:ss"
+    const formatTime = (timeString) => {
+      if (!timeString) {
+        return '-'; // Return a dash if time is missing
+      }
+
+      const date = new Date(timeString);
+      const hours = String(date.getUTCHours()).padStart(2, '0');
+      const minutes = String(date.getUTCMinutes()).padStart(2, '0');
+      const seconds = String(date.getUTCSeconds()).padStart(2, '0');
+
+      return `${hours}:${minutes}:${seconds}`;
+    };
+
+    // Define a method to calculate the time total in hh:mm format
+    const calculateTimeTotal = (startTime, endTime) => {
+      if (!startTime || !endTime) {
+        return '-'; // Return a dash if either start or end time is missing
+      }
+
+      const startDateTime = new Date(`1970-01-01T${startTime}`);
+      const endDateTime = new Date(`1970-01-01T${endTime}`);
+
+      // Set both dates to the same fixed date (e.g., the oldest date)
+      const fixedDate = new Date('1970-01-01');
+
+      startDateTime.setFullYear(fixedDate.getFullYear(), fixedDate.getMonth(), fixedDate.getDate());
+      endDateTime.setFullYear(fixedDate.getFullYear(), fixedDate.getMonth(), fixedDate.getDate());
+
+      const timeDiffMs = endDateTime - startDateTime;
+      const hours = String(Math.floor(timeDiffMs / 3600000)).padStart(2, '0');
+      const minutes = String(Math.floor((timeDiffMs % 3600000) / 60000)).padStart(2, '0');
+      const seconds = String(Math.floor((timeDiffMs % 60000) / 1000)).padStart(2, '0');
+
+      return `${hours}:${minutes}:${seconds}`;
+    };
 
     return {
       jobs,
-      selectedJob,
+      getClientName,
+      getOperaterName,
+      getStatusName,
+      formatDate,
+      formatTime,
+      calculateTimeTotal,
     };
   },
   data() {
@@ -176,7 +248,3 @@ button:hover {
 }
 
 </style>
-  
-  
-  
-  @/store
