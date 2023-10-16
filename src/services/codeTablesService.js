@@ -50,3 +50,21 @@ export async function fetchJobTypes() {
       throw error;
     }
   }
+
+  export async function fetchJobs() {
+    try {
+      const response = await axios.get(`${BASE_URL}/jobs`);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  }
+  
+  export async function createJob(newJobData) {
+    try {
+      const response = await axios.post(`${BASE_URL}/jobs`, newJobData);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  }

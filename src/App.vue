@@ -6,7 +6,7 @@
 
 <script>
 import { onBeforeMount } from 'vue';
-import { useCodeTablesStore } from '@/store/store';
+import { useCodeTablesStore } from '@/store';
 
 export default {
   name: 'App',
@@ -20,6 +20,7 @@ export default {
       await codeTablesStore.fetchMaterialsEquipment();
       await codeTablesStore.fetchStatuses();
       await codeTablesStore.fetchClients();
+      await codeTablesStore.fetchJobs()
     });
   },
 };

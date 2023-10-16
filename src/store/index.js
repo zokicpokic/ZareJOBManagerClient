@@ -1,14 +1,15 @@
 import { defineStore } from 'pinia'; // Import defineStore, not createPinia
 import * as codeTablesService from '@/services/codeTablesService';
 
-export const useCodeTablesStore = defineStore({
-  id: 'codeTables',
+export const useCodeTablesStore = defineStore('codeTables', {
   state: () => ({
     users: [],
     jobTypes: [],
     materialsEquipment: [],
     statuses: [],
     clients: [],
+    jobs: [],
+    selectedJob: null,
   }),
   getters: {
     getUsers: (state) => state.users,
@@ -16,8 +17,13 @@ export const useCodeTablesStore = defineStore({
     getMaterialsEquipment: (state) => state.materialsEquipment,
     getStatuses: (state) => state.statuses,
     getClients: (state) => state.clients,
+    getJobs: (state) => state.jobs,
+    getSelectedJob: (state) => state.selectedJob, 
   },
   actions: {
+    setSelectedJob(job) {
+      this.selectedJob = job; // Set the 'selectedJob' when a job is selected
+    },
     async fetchUsers() {
       try {
         this.users = await codeTablesService.fetchUsers();
@@ -51,6 +57,23 @@ export const useCodeTablesStore = defineStore({
         this.clients = await codeTablesService.fetchClients();
       } catch (error) {
         console.error('Error fetching clients:', error);
+      }
+    },
+    async fetchJobs() {
+      try {
+        this.jobs = await codeTablesService.fetchJobs(); // Fetch jobs from your database
+      } catch (error) {
+        console.error('Error fetching jobs:', error);
+      }
+    },
+    async createJob(newJobData) {
+      try {
+        // Call your service function to create a new job
+        const createdJob = await codeTablesService.createJob(newJobData);
+        return createdJob;
+      } catch (error) {
+        console.error('Error creating job:', error);
+        throw error;
       }
     },
   },
