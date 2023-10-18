@@ -60,17 +60,25 @@
       <!-- Repeat for each operator -->
       <div class="operator">
         <div class="operator-icon"></div>
-        <span>Vaske</span>
+        <span>user1</span>
       </div>
       
       <!-- ... -->
     </div>
     
     <div class="actions">
-      <button @click="startJob">START</button>
-      <button>PAUZA</button>
-      <button>STOP</button>
-      <button>END</button>
+      <button class="action-btn start-btn" @click="startJob" :disabled="!isStartEnabled">
+        <font-awesome-icon icon="play" />
+      </button>
+      <button class="action-btn pause-btn" @click="stopJob" :disabled="!isOtherActionsEnabled">
+        <font-awesome-icon icon="pause" />
+      </button>
+      <button class="action-btn stop-btn" @click="stopJob" :disabled="!isOtherActionsEnabled">
+        <font-awesome-icon icon="stop" />
+      </button>
+      <button class="action-btn end-btn" @click="stopJob" :disabled="!isOtherActionsEnabled">
+        <font-awesome-icon icon="check" />
+      </button>
     </div>
     
     <div class="footer-icons">
@@ -85,9 +93,10 @@ import { useCodeTablesStore } from '@/store';
 
 export default {
   name: 'NewJob',
-  setup() {
+  setup(_, { emit }) {
     const store = useCodeTablesStore();
 
+    var isJobFromStore = store.getSelectedJob != null
     // Initialize selectedJob as a computed property
     const selectedJob = computed(() => {
       const jobFromStore = store.getSelectedJob;
@@ -188,14 +197,38 @@ export default {
       store.setSelectedJob(selectedJob.value);
     }
 
+    const closeNewJobModal = () => {
+      emit('close');  // Emitting an event to signal the parent to close the modal.
+    };
+
     const startJob = async () => {
       // Assuming you have the job data in selectedJob
+      selectedJob.value.status_id = getStatusIdByName("Running");
+      
       const newJobData = selectedJob.value;
 
       // Dispatch the createJob action from your Pinia store
       await store.createJob(newJobData);
 
-      // You can perform other actions or state updates here if needed
+      // If you want to instantly reflect the created job in your jobs list:
+      useCodeTablesStore().jobs.push(newJobData);
+      
+      emit('jobAdded');
+      // Close the modal or perform any other action after the job is created successfully.
+      closeNewJobModal();
+    };
+
+    const stopJob = async () => {
+      // Assuming you have the job data in selectedJob
+      const now = new Date();
+      selectedJob.value.status_id = getStatusIdByName("Finished");
+      selectedJob.value.end_time = getTime(now);
+      //const newJobData = selectedJob.value;
+
+      // Dispatch the createJob action from your Pinia store
+      //await store.updateJob(newJobData.id, newJobData);
+      // Close the modal or perform any other action after the job is created successfully.
+      closeNewJobModal();
     };
     return {
       selectedJob,
@@ -206,8 +239,21 @@ export default {
       filteredMaterialsEquipmentEnvelope,
       filteredMaterialsEquipmentEnvelopePS,
       startJob,
+      stopJob,
+      isJobFromStore,
     };
   },
+  computed: {
+    isJobPassed() {
+      return this.isJobFromStore;
+    },
+    isStartEnabled() {
+        return !this.isJobPassed;
+    },
+    isOtherActionsEnabled() {
+        return this.isJobPassed;
+    }
+}
 };
 </script>
 
@@ -217,11 +263,25 @@ export default {
 }
 
 .client-section {
-  /* Styles for the client dropdown and date/time */
+  /* This will add space below every jobItem. */
+  margin-bottom: 16px;
+
+  /* Alternatively, if you want to add space around the entire control (e.g., top, right, bottom, and left), you can use: */
+  margin: 16px;
+  
+  /* If you want to add spacing between elements inside the .jobItem, use padding instead: */
+  padding: 16px;
 }
 
-.job-details {
-  /* Styles for the job details section */
+.job-item, job-details {
+  /* This will add space below every jobItem. */
+  margin-bottom: 16px;
+
+  /* Alternatively, if you want to add space around the entire control (e.g., top, right, bottom, and left), you can use: */
+  margin: 16px;
+  
+  /* If you want to add spacing between elements inside the .jobItem, use padding instead: */
+  padding: 16px;
 }
 
 .operator {
@@ -229,7 +289,47 @@ export default {
 }
 
 .actions {
-  /* Styles for the action buttons */
+  display: flex;
+  gap: 1rem;
+}
+
+.action-btn {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0.5rem 1rem;
+  transition: background-color 0.3s;
+}
+
+.action-btn:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.action-btn:disabled {
+    background-color: #f5f5f5;
+    color: #a8a8a8;
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+/* Ensure icons inside the button inherit the color and cursor */
+.action-btn:disabled .font-awesome-icon {
+    color: inherit;
+    cursor: inherit;
+}
+
+.start-btn .fa-play,
+.end-btn .fa-check {
+  color: green;
+}
+
+.pause-btn .fa-pause {
+  color: blue;
+}
+
+.stop-btn .fa-stop {
+  color: red;
 }
 
 .footer-icons {

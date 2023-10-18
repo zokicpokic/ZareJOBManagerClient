@@ -2,8 +2,14 @@ import { createApp } from 'vue';
 import App from './App.vue';
 import router from './router';
 import { createPinia } from 'pinia';
-//import { useCodeTablesStore } from '@/store'; // Import your store
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { faPlay, faPause, faStop, faCheck } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+
 const app = createApp(App);
+
+library.add(faPlay, faPause, faStop, faCheck);
+app.component('font-awesome-icon', FontAwesomeIcon);
 
 const pinia = createPinia();
 app.use(pinia);

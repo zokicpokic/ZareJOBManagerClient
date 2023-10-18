@@ -76,5 +76,22 @@ export const useCodeTablesStore = defineStore('codeTables', {
         throw error;
       }
     },
+    async updateJob(jobId, updatedJobData) {
+      try {
+        // Call your service function to update an existing job
+        const updatedJob = await codeTablesService.updateJob(jobId, updatedJobData);
+        
+        // Optionally, you can update the job in the store's state if needed
+        const index = this.jobs.findIndex(job => job.id === jobId);
+        if (index !== -1) {
+          this.jobs[index] = updatedJob;
+        }
+  
+        return updatedJob;
+      } catch (error) {
+        console.error('Error updating job:', error);
+        throw error;
+      }
+    },
   },
 });

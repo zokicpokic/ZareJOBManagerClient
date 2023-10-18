@@ -3,8 +3,8 @@
 
 import axios from 'axios'; // You can use any HTTP library here
 
-const BASE_URL = 'https://localhost:3000/api'; //dev
-//const BASE_URL = 'https://89.216.103.191:3000/api'; //production
+//const BASE_URL = 'https://localhost:3000/api'; //dev
+const BASE_URL = 'https://89.216.103.191:3000/api'; //production
 
 export async function fetchUsers() {
   try {
@@ -68,3 +68,13 @@ export async function fetchJobTypes() {
       throw error;
     }
   }
+
+  export async function updateJob(jobId, updatedJobData) {
+    try {
+      const response = await axios.put(`${BASE_URL}/jobs/${jobId}`, updatedJobData);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  }
+  
