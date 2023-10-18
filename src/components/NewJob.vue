@@ -1,128 +1,153 @@
 <template>
   <div class="new-job">
-    <h1>New Job</h1>
-    <div class="job-row">
-      <div class="job-item">
-        <div class="input-container">
-          <label>Klijent:</label>
-          <input list="client-datalist" v-model="selectedJob.client_id">
+    <div class="header">
+      <h1>New Job</h1>
+      <div class="close-button-row">
+        <button data-v-8c8614a6="" class="action-btn close-btn" @click="closeNewJobModal">
+        <svg class="svg-inline--fa fa-times" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="times" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 352 512">
+            <path fill="currentColor" d="M242.72 256l100.07-100.07c12.28-12.28 12.28-32.19 0-44.48l-22.24-22.24c-12.28-12.28-32.19-12.28-44.48 0L176 189.28 75.93 89.21c-12.28-12.28-32.19-12.28-44.48 0L9.21 111.45c-12.28 12.28-12.28 32.19 0 44.48L109.28 256 9.21 356.07c-12.28 12.28-12.28 32.2 0 44.48l22.24 22.24c12.28 12.28 32.2 12.28 44.48 0L176 322.72 276.07 422.79c12.28 12.28 32.2 12.28 44.48 0l22.24-22.24c12.28-12.28 12.28-32.19 0-44.48L242.72 256z"></path>
+        </svg>
+        </button>
+      </div>
+    </div>
+    
+    <div class="operators">
+      <!-- Loop through users and display each user -->
+      <div v-for="user in users" :key="user.id" class="operator">
+        <div>
+          <font-awesome-icon icon="user" /> <!-- Font Awesome user icon -->
+        </div>
+        <span>{{ user.username }}</span>
+      </div>
+    </div>
+    <div>
+    </div>
+    <div class="job-details">
+      <div class="job-row">
+        <div class="job-item">
+          <div class="input-container">
+            <div class="client-large">
+              <label>Klijent:</label>
+              <div>
+                <input list="client-datalist" v-model="selectedJob.client_id">
+              </div>
+            </div>
+            <div class="client-small">
+              <label>Klijent:</label>
+              <input list="client-datalist" v-model="selectedJob.client_id">
+            </div>
+          </div>
           <datalist id="client-datalist">
             <option v-for="client in clients" :key="client.id">{{ client.client_name }}</option>
           </datalist>
-        </div>
-      <!--<span v-if="selectedJob">{{ selectedJob.job_date }}</span>-->
-    </div> 
-    </div>
-    <div class="job-details">
-        <!-- First Row -->
-        <div class="job-row">
-          <div class="job-item job-item-small-screen">
-            <div class="input-container">
-              <label>PAPIR vrsta:</label>
-              <input list="paper-datalist" v-model="selectedJob.paper_id">
-            </div>
-            <datalist id="paper-datalist">
-              <option v-for="material in filteredMaterialsEquipmentPaper" :key="material.id">{{ material.dekel_code }}</option>
-            </datalist>
+        </div> 
+      </div>
+      <!-- First Row -->
+      <div class="job-row">
+        <div class="job-item job-item-small-screen">
+          <div class="input-container">
+            <label>PAPIR vrsta:</label>
+            <input list="paper-datalist" v-model="selectedJob.paper_id">
           </div>
-
-          <div class="job-item job-item-small-screen">
-            <div class="input-container">
-              <label>PRINTER:</label>
-              <input list="printer-datalist" v-model="selectedJob.printer_id">
-            </div>
-            <datalist id="printer-datalist">
-              <option v-for="material in materialsEquipment" :key="material.id">{{ material.dekel_code }}</option>
-            </datalist>
-          </div>
-
-          <div class="job-item job-item-small-screen">
-            <div class="input-container">
-              <label>KOVERAT vrsta:</label>
-              <input list="envelope-datalist" v-model="selectedJob.envelope_id">
-            </div>
-            <datalist id="envelope-datalist">
-              <option v-for="material in filteredMaterialsEquipmentEnvelope" :key="material.id">{{ material.dekel_code }}</option>
-            </datalist>
-          </div>
+          <datalist id="paper-datalist">
+            <option v-for="material in filteredMaterialsEquipmentPaper" :key="material.id">{{ material.dekel_code }}</option>
+          </datalist>
         </div>
 
-        <!-- Second Row -->
-        <div class="job-row">
-          <div class="job-item job-item-small-screen">
-            <div class="input-container">
-              <label>KOV PRINTER:</label>
-              <input list="printer_env-datalist" v-model="selectedJob.envelope_printer_id">
-            </div>
-            <datalist id="printer_env-datalist">
-              <option v-for="material in materialsEquipment" :key="material.id">{{ material.dekel_code }}</option>
-            </datalist>
+        <div class="job-item job-item-small-screen">
+          <div class="input-container">
+            <label>PRINTER:</label>
+            <input list="printer-datalist" v-model="selectedJob.printer_id">
           </div>
-
-          <div class="job-item job-item-small-screen">
-            <div class="input-container">
-              <label>KOVERTIR:</label>
-              <input list="printer_env_ps-datalist" v-model="selectedJob.envelope_printer_id">
-            </div>
-            <datalist id="printer_env_ps-datalist">
-              <option v-for="material in filteredMaterialsEquipmentEnvelopePS" :key="material.id">{{ material.dekel_code }}</option>
-            </datalist>
-          </div>
-
-          <div class="job-item job-item-small-screen">
-            <div class="input-container">
-              <label>PS MASINA:</label>
-              <input list="ps-datalist" v-model="selectedJob.ps_machine_id">
-            </div>
-            <datalist id="ps-datalist">
-              <option v-for="material in materialsEquipment" :key="material.id">{{ material.dekel_code }}</option>
-            </datalist>
-          </div>
+          <datalist id="printer-datalist">
+            <option v-for="material in materialsEquipment" :key="material.id">{{ material.dekel_code }}</option>
+          </datalist>
         </div>
 
-        <!-- Third Row (Qty Fields) -->
-        <div class="job-row">
-          <div class="job-item job-item-small-screen">
-            <div class="input-container">
-              <label>Qty listova:</label>
-              <input type="text" v-model="selectedJob.qty_lists" @keydown="preventNonNumericKey" />
-            </div>
+        <div class="job-item job-item-small-screen">
+          <div class="input-container">
+            <label>KOVERAT vrsta:</label>
+            <input list="envelope-datalist" v-model="selectedJob.envelope_id">
           </div>
+          <datalist id="envelope-datalist">
+            <option v-for="material in filteredMaterialsEquipmentEnvelope" :key="material.id">{{ material.dekel_code }}</option>
+          </datalist>
+        </div>
+      </div>
 
-          <div class="job-item job-item-small-screen">
-            <div class="input-container">
-              <label>Qty stranica:</label>
-              <input type="text" v-model="selectedJob.qty_pages" @keydown="preventNonNumericKey" />
-            </div>
+      <!-- Second Row -->
+      <div class="job-row">
+        <div class="job-item job-item-small-screen">
+          <div class="input-container">
+            <label>KOV PRINTER:</label>
+            <input list="printer_env-datalist" v-model="selectedJob.envelope_printer_id">
           </div>
+          <datalist id="printer_env-datalist">
+            <option v-for="material in materialsEquipment" :key="material.id">{{ material.dekel_code }}</option>
+          </datalist>
+        </div>
 
-          <div class="job-item job-item-small-screen">
-            <div class="input-container">
-              <label>Qty koverata:</label>
-              <input type="text" v-model="selectedJob.qty_envelope" @keydown="preventNonNumericKey" />
+        <div class="job-item job-item-small-screen">
+          <div class="input-container">
+            <label>KOVERTIR:</label>
+            <input list="printer_env_ps-datalist" v-model="selectedJob.envelope_printer_id">
           </div>
+          <datalist id="printer_env_ps-datalist">
+            <option v-for="material in filteredMaterialsEquipmentEnvelopePS" :key="material.id">{{ material.dekel_code }}</option>
+          </datalist>
+        </div>
+
+        <div class="job-item job-item-small-screen">
+          <div class="input-container">
+            <label>PS MASINA:</label>
+            <input list="ps-datalist" v-model="selectedJob.ps_machine_id">
+          </div>
+          <datalist id="ps-datalist">
+            <option v-for="material in materialsEquipment" :key="material.id">{{ material.dekel_code }}</option>
+          </datalist>
+        </div>
+      </div>
+
+      <!-- Third Row (Qty Fields) -->
+      <div class="job-row">
+        <div class="job-item job-item-small-screen">
+          <div class="input-container">
+            <label>Qty listova:</label>
+            <input type="text" v-model="selectedJob.qty_lists" @keydown="preventNonNumericKey" />
           </div>
         </div>
 
-        <div class="job-row">
-          <div class="job-item job-item-small-screen">
-            <div class="input-container">
+        <div class="job-item job-item-small-screen">
+          <div class="input-container">
+            <label>Qty stranica:</label>
+            <input type="text" v-model="selectedJob.qty_pages" @keydown="preventNonNumericKey" />
+          </div>
+        </div>
+
+        <div class="job-item job-item-small-screen">
+          <div class="input-container">
+            <label>Qty koverata:</label>
+            <input type="text" v-model="selectedJob.qty_envelope" @keydown="preventNonNumericKey" />
+        </div>
+        </div>
+      </div>
+
+      <div class="job-row">
+        <div class="job-item job-item-small-screen">
+          <div class="input-container">
+            <div class="client-large">
+              <label>Kutija kom.:</label>
+              <div>
+                <input type="text" v-model="selectedJob.qty_boxes" @keydown="preventNonNumericKey" />
+              </div>
+            </div>
+            <div class="client-small">
               <label>Kutija kom.:</label>
               <input type="text" v-model="selectedJob.qty_boxes" @keydown="preventNonNumericKey" />
             </div>
           </div>
         </div>
-    </div>
-
-    
-    <div class="operators">
-      <!-- Repeat for each operator -->
-      <div class="operator">
-        <div class="operator-icon"></div>
-        <span>user1</span>
       </div>
-      
-      <!-- ... -->
     </div>
     
     <div class="actions">
@@ -137,11 +162,6 @@
       </button>
       <button class="action-btn end-btn" @click="stopJob" :disabled="!isOtherActionsEnabled">
         <font-awesome-icon icon="check" />
-      </button>
-      <button data-v-8c8614a6="" class="action-btn close-btn" @click="closeNewJobModal">
-          <svg class="svg-inline--fa fa-times" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="times" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 352 512">
-              <path fill="currentColor" d="M242.72 256l100.07-100.07c12.28-12.28 12.28-32.19 0-44.48l-22.24-22.24c-12.28-12.28-32.19-12.28-44.48 0L176 189.28 75.93 89.21c-12.28-12.28-32.19-12.28-44.48 0L9.21 111.45c-12.28 12.28-12.28 32.19 0 44.48L109.28 256 9.21 356.07c-12.28 12.28-12.28 32.2 0 44.48l22.24 22.24c12.28 12.28 32.2 12.28 44.48 0L176 322.72 276.07 422.79c12.28 12.28 32.2 12.28 44.48 0l22.24-22.24c12.28-12.28 12.28-32.19 0-44.48L242.72 256z"></path>
-          </svg>
       </button>
     </div>
     
@@ -404,7 +424,7 @@ input {
     width: 30px;
     height: 30px;
     margin-right: 10px;
-    background-color: #ccc;
+    background-color: #120e0e;
     border-radius: 50%;
 }
 
@@ -427,6 +447,19 @@ input {
 .pause-btn { background-color: #FFC107; }
 .stop-btn { background-color: #FF5722; }
 .end-btn { background-color: #3F51B5; }
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.close-button-row {
+  display: flex;
+  align-items: center;
+}
+
 .close-btn { background-color: #01237a; }
 
 .action-btn:disabled {
@@ -442,6 +475,9 @@ font-awesome-icon {
     margin-right: 5px;
 }
 
+.client-small {
+    display: none;
+ }
 @media screen and (max-width: 800px) {
   /* Style to make controls appear one below the other */
   .job-row {
@@ -452,6 +488,12 @@ font-awesome-icon {
     flex: none;
     width: 100%;
     margin-right: 0;
+  }
+  .client-large {
+      display: none;
+  }
+  .client-small {
+      display: block;
   }
 }
 </style>

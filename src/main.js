@@ -3,12 +3,12 @@ import App from './App.vue';
 import router from './router';
 import { createPinia } from 'pinia';
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faPlay, faPause, faStop, faCheck } from '@fortawesome/free-solid-svg-icons';
+import { faPlay, faPause, faStop, faCheck, faUser } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 const app = createApp(App);
 
-library.add(faPlay, faPause, faStop, faCheck);
+library.add(faPlay, faPause, faStop, faCheck, faUser);
 app.component('font-awesome-icon', FontAwesomeIcon);
 
 const pinia = createPinia();
