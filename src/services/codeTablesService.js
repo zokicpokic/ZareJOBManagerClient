@@ -9,7 +9,7 @@ const BASE_URL = 'https://localhost:3000/api'; //dev
 export async function fetchUsers() {
   try {
     const response = await axios.get(`${BASE_URL}/users`);
-    return response.data.sort((a, b) => a.name.localeCompare(b.name));
+    return response.data.sort((a, b) => a.username.localeCompare(b.username));
   } catch (error) {
     throw error;
   }

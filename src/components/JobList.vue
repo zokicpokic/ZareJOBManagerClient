@@ -8,7 +8,7 @@
         <!-- Modal Content -->
         <div class="modal">
           <!-- Pass selectedJob as a prop to NewJobModal -->
-          <NewJobModal :selectedJob="selectedJob" @close="closeNewJobModal" @jobAdded="refreshJobsList" />
+          <NewJobModal :selectedJob="selectedJob" @close="closeNewJobModal" @jobAddedOrUpdated="refreshJobsList" />
         </div>
       </div>
       <table>

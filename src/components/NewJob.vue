@@ -1,62 +1,119 @@
 <template>
   <div class="new-job">
     <h1>New Job</h1>
-    <div class="client-section">
-      <label>Klijent:</label>
-      <input list="client-datalist" v-model="selectedJob.client_id">
-      <datalist id="client-datalist">
-        <option v-for="client in clients" :key="client.id">{{ client.client_name }}</option>
-      </datalist>
-      <span v-if="selectedJob">{{ selectedJob.job_date }}</span>
-    </div>    
+    <div class="job-row">
+      <div class="job-item">
+        <div class="input-container">
+          <label>Klijent:</label>
+          <input list="client-datalist" v-model="selectedJob.client_id">
+          <datalist id="client-datalist">
+            <option v-for="client in clients" :key="client.id">{{ client.client_name }}</option>
+          </datalist>
+        </div>
+      <!--<span v-if="selectedJob">{{ selectedJob.job_date }}</span>-->
+    </div> 
+    </div>
     <div class="job-details">
-      <!-- Repeat this structure for each job detail like PAPIR vrsta, PRINTER, etc. -->
-      <div class="job-item">
-        <label>PAPIR vrsta:</label>
-        <input list="paper-datalist" v-model="selectedJob.paper_id">
-        <datalist id="paper-datalist">
-          <option v-for="material in filteredMaterialsEquipmentPaper" :key="material.id">{{ material.dekel_code }}</option>
-        </datalist>
-        <label>PRINTER:</label>
-        <input list="printer-datalist" v-model="selectedJob.printer_id">
-        <datalist id="printer-datalist">
-          <option v-for="material in materialsEquipment" :key="material.id">{{ material.dekel_code }}</option>
-        </datalist>
-        <label>KOVERAT vrsta:</label>
-        <input list="envelope-datalist" v-model="selectedJob.envelope_id">
-        <datalist id="envelope-datalist">
-          <option v-for="material in filteredMaterialsEquipmentEnvelope" :key="material.id">{{ material.dekel_code }}</option>
-        </datalist>
-        <label>KOV PRINTER:</label>
-        <input list="printer_env-datalist" v-model="selectedJob.envelope_printer_id">
-        <datalist id="printer_env-datalist">
-          <option v-for="material in materialsEquipment" :key="material.id">{{ material.dekel_code }}</option>
-        </datalist>
-        <label>KOVERTIR:</label>
-        <input list="printer_env_ps-datalist" v-model="selectedJob.envelope_printer_id">
-        <datalist id="printer_env_ps-datalist">
-          <option v-for="material in filteredMaterialsEquipmentEnvelopePS" :key="material.id">{{ material.dekel_code }}</option>
-        </datalist>
-        <label>PS MASINA:</label>
-        <input list="ps-datalist" v-model="selectedJob.ps_machine_id">
-        <datalist id="ps-datalist">
-          <option v-for="material in materialsEquipment" :key="material.id">{{ material.dekel_code }}</option>
-        </datalist>
-      </div>
-      <div class="job-item">
-        <label>Qty listova</label>
-        <input type="text" v-model="selectedJob.qty_lists" @keydown="preventNonNumericKey" />
+        <!-- First Row -->
+        <div class="job-row">
+          <div class="job-item job-item-small-screen">
+            <div class="input-container">
+              <label>PAPIR vrsta:</label>
+              <input list="paper-datalist" v-model="selectedJob.paper_id">
+            </div>
+            <datalist id="paper-datalist">
+              <option v-for="material in filteredMaterialsEquipmentPaper" :key="material.id">{{ material.dekel_code }}</option>
+            </datalist>
+          </div>
 
-        <label>Qty stranica</label>
-        <input type="text" v-model="selectedJob.qty_pages" @keydown="preventNonNumericKey" />
+          <div class="job-item job-item-small-screen">
+            <div class="input-container">
+              <label>PRINTER:</label>
+              <input list="printer-datalist" v-model="selectedJob.printer_id">
+            </div>
+            <datalist id="printer-datalist">
+              <option v-for="material in materialsEquipment" :key="material.id">{{ material.dekel_code }}</option>
+            </datalist>
+          </div>
 
-        <label>Qty koverata</label>
-        <input type="text" v-model="selectedJob.qty_envelope" @keydown="preventNonNumericKey" />
+          <div class="job-item job-item-small-screen">
+            <div class="input-container">
+              <label>KOVERAT vrsta:</label>
+              <input list="envelope-datalist" v-model="selectedJob.envelope_id">
+            </div>
+            <datalist id="envelope-datalist">
+              <option v-for="material in filteredMaterialsEquipmentEnvelope" :key="material.id">{{ material.dekel_code }}</option>
+            </datalist>
+          </div>
+        </div>
 
-        <label>Kutija kom.:</label>
-        <input type="text" v-model="selectedJob.qty_boxes" @keydown="preventNonNumericKey" />
+        <!-- Second Row -->
+        <div class="job-row">
+          <div class="job-item job-item-small-screen">
+            <div class="input-container">
+              <label>KOV PRINTER:</label>
+              <input list="printer_env-datalist" v-model="selectedJob.envelope_printer_id">
+            </div>
+            <datalist id="printer_env-datalist">
+              <option v-for="material in materialsEquipment" :key="material.id">{{ material.dekel_code }}</option>
+            </datalist>
+          </div>
+
+          <div class="job-item job-item-small-screen">
+            <div class="input-container">
+              <label>KOVERTIR:</label>
+              <input list="printer_env_ps-datalist" v-model="selectedJob.envelope_printer_id">
+            </div>
+            <datalist id="printer_env_ps-datalist">
+              <option v-for="material in filteredMaterialsEquipmentEnvelopePS" :key="material.id">{{ material.dekel_code }}</option>
+            </datalist>
+          </div>
+
+          <div class="job-item job-item-small-screen">
+            <div class="input-container">
+              <label>PS MASINA:</label>
+              <input list="ps-datalist" v-model="selectedJob.ps_machine_id">
+            </div>
+            <datalist id="ps-datalist">
+              <option v-for="material in materialsEquipment" :key="material.id">{{ material.dekel_code }}</option>
+            </datalist>
+          </div>
+        </div>
+
+        <!-- Third Row (Qty Fields) -->
+        <div class="job-row">
+          <div class="job-item job-item-small-screen">
+            <div class="input-container">
+              <label>Qty listova:</label>
+              <input type="text" v-model="selectedJob.qty_lists" @keydown="preventNonNumericKey" />
+            </div>
+          </div>
+
+          <div class="job-item job-item-small-screen">
+            <div class="input-container">
+              <label>Qty stranica:</label>
+              <input type="text" v-model="selectedJob.qty_pages" @keydown="preventNonNumericKey" />
+            </div>
+          </div>
+
+          <div class="job-item job-item-small-screen">
+            <div class="input-container">
+              <label>Qty koverata:</label>
+              <input type="text" v-model="selectedJob.qty_envelope" @keydown="preventNonNumericKey" />
+          </div>
+          </div>
+        </div>
+
+        <div class="job-row">
+          <div class="job-item job-item-small-screen">
+            <div class="input-container">
+              <label>Kutija kom.:</label>
+              <input type="text" v-model="selectedJob.qty_boxes" @keydown="preventNonNumericKey" />
+            </div>
+          </div>
+        </div>
     </div>
-    </div>
+
     
     <div class="operators">
       <!-- Repeat for each operator -->
@@ -217,7 +274,7 @@ export default {
       // Dispatch the createJob action from your Pinia store
       await store.createJob(newJobData);
       
-      emit('jobAdded');
+      emit('jobAddedOrUpdated');
       // Close the modal or perform any other action after the job is created successfully.
       closeNewJobModal();
     };
@@ -227,10 +284,11 @@ export default {
       const now = new Date();
       selectedJob.value.status_id = getStatusIdByName("Finished");
       selectedJob.value.end_time = getTime(now);
-      //const newJobData = selectedJob.value;
+      const newJobData = selectedJob.value;
 
       // Dispatch the createJob action from your Pinia store
-      //await store.updateJob(newJobData.id, newJobData);
+      await store.updateJob(newJobData.id, newJobData);
+      emit('jobAddedOrUpdated');
       // Close the modal or perform any other action after the job is created successfully.
       closeNewJobModal();
     };
@@ -271,92 +329,130 @@ export default {
 </script>
 
 <style scoped>
+/* Styles for the New Job component */
+
 .new-job {
-  /* Container styles */
+    padding: 20px;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    max-width: 800px;
+    margin: 0 auto;
+    font-family: Arial, sans-serif;
+    background-color: #f7f7f7;
+}
+
+h1 {
+    text-align: center;
+    font-size: 24px;
+    margin-bottom: 20px;
 }
 
 .client-section {
-  /* This will add space below every jobItem. */
-  margin-bottom: 16px;
-
-  /* Alternatively, if you want to add space around the entire control (e.g., top, right, bottom, and left), you can use: */
-  margin: 16px;
-  
-  /* If you want to add spacing between elements inside the .jobItem, use padding instead: */
-  padding: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
 }
 
-.job-item, job-details {
-  /* This will add space below every jobItem. */
-  margin-bottom: 16px;
+.job-details {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
 
-  /* Alternatively, if you want to add space around the entire control (e.g., top, right, bottom, and left), you can use: */
-  margin: 16px;
-  
-  /* If you want to add spacing between elements inside the .jobItem, use padding instead: */
-  padding: 16px;
+.job-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.job-item {
+  flex: 1;
+  margin-right: 10px; /* Adjust as needed to add spacing between items */
+}
+
+.input-container {
+  margin-bottom: 10px;
+}
+
+label {
+    font-weight: bold;
+    margin-right: 10px;
+}
+
+input {
+    padding: 5px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+.operators {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
 }
 
 .operator {
-  /* Styles for each operator item */
+    display: flex;
+    align-items: center;
+}
+
+.operator-icon {
+    width: 30px;
+    height: 30px;
+    margin-right: 10px;
+    background-color: #ccc;
+    border-radius: 50%;
 }
 
 .actions {
     display: flex;
-    justify-content: space-between; /* Add this line to justify the content */
-    gap: 1rem;
-    align-items: center; /* To vertically align items if they have different heights */
+    align-items: center;
+    justify-content: center;
 }
 
 .action-btn {
-  background: none;
-  border: none;
-  font-size: 1.5rem;
-  cursor: pointer;
-  padding: 0.5rem 1rem;
-  transition: background-color 0.3s;
+    margin: 0 5px;
+    padding: 5px 15px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
 }
 
-.action-btn:hover {
-  background-color: rgba(0, 0, 0, 0.1);
-}
+.start-btn { background-color: #4CAF50; }
+.pause-btn { background-color: #FFC107; }
+.stop-btn { background-color: #FF5722; }
+.end-btn { background-color: #3F51B5; }
+.close-btn { background-color: #01237a; }
 
 .action-btn:disabled {
-    background-color: #f5f5f5;
-    color: #a8a8a8;
+    background-color: #ccc;
     cursor: not-allowed;
-    opacity: 0.7;
 }
 
-/* Ensure icons inside the button inherit the color and cursor */
-.action-btn:disabled .font-awesome-icon {
-    color: inherit;
-    cursor: inherit;
+.action-btn:hover:not(:disabled) {
+    opacity: 0.8;
 }
 
-.close-btn {
-    margin-left: auto; /* This will push the button to the right */
-    color: #666; /* Color for the close button (change if needed) */
+font-awesome-icon {
+    margin-right: 5px;
 }
 
-.close-btn .fa-times {
-    color: inherit; /* Ensure the icon inherits the color from the button */
-}
+@media screen and (max-width: 800px) {
+  /* Style to make controls appear one below the other */
+  .job-row {
+    flex-direction: column;
+  }
 
-.start-btn .fa-play,
-.end-btn .fa-check {
-  color: green;
-}
-
-.pause-btn .fa-pause {
-  color: blue;
-}
-
-.stop-btn .fa-stop {
-  color: red;
-}
-
-.footer-icons {
-  /* Styles for the bottom icons */
+  .job-item {
+    flex: none;
+    width: 100%;
+    margin-right: 0;
+  }
 }
 </style>
+
