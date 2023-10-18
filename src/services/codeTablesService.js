@@ -3,13 +3,13 @@
 
 import axios from 'axios'; // You can use any HTTP library here
 
-//const BASE_URL = 'https://localhost:3000/api'; //dev
-const BASE_URL = 'https://89.216.103.191:3000/api'; //production
+const BASE_URL = 'https://localhost:3000/api'; //dev
+//const BASE_URL = 'https://89.216.103.191:3000/api'; //production
 
 export async function fetchUsers() {
   try {
     const response = await axios.get(`${BASE_URL}/users`);
-    return response.data;
+    return response.data.sort((a, b) => a.name.localeCompare(b.name));
   } catch (error) {
     throw error;
   }
@@ -26,10 +26,12 @@ export async function fetchJobTypes() {
 
   export async function fetchMaterialsEquipment() {
     try {
-      const response = await axios.get(`${BASE_URL}/materials_equipment`);
-      return response.data;
+        const response = await axios.get(`${BASE_URL}/materials_equipment`);
+        return response.data
+            .filter(item => item.dekel_code && item.dekel_code.trim() !== "") // Exclude items with empty dekel_code
+            .sort((a, b) => a.dekel_code.localeCompare(b.dekel_code)); // Sort the filtered items alphabetically
     } catch (error) {
-      throw error;
+        throw error;
     }
   }
 
@@ -45,7 +47,7 @@ export async function fetchJobTypes() {
   export async function fetchClients() {
     try {
       const response = await axios.get(`${BASE_URL}/clients`);
-      return response.data;
+      return response.data.sort((a, b) => a.client_name.localeCompare(b.client_name));
     } catch (error) {
       throw error;
     }

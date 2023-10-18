@@ -1,59 +1,61 @@
 <template>
   <div class="new-job">
     <h1>New Job</h1>
-    
     <div class="client-section">
       <label>Klijent:</label>
-      <select v-model="selectedJob.client_id">
-        <option :value="null">Select a client</option>
-        <option v-for="client in clients" :key="client.id" :value="client.id">{{ client.client_name }}</option>
-      </select>
+      <input list="client-datalist" v-model="selectedJob.client_id">
+      <datalist id="client-datalist">
+        <option v-for="client in clients" :key="client.id">{{ client.client_name }}</option>
+      </datalist>
       <span v-if="selectedJob">{{ selectedJob.job_date }}</span>
     </div>    
     <div class="job-details">
       <!-- Repeat this structure for each job detail like PAPIR vrsta, PRINTER, etc. -->
       <div class="job-item">
         <label>PAPIR vrsta:</label>
-        <select v-model="selectedJob.paper_id">
-          <option :value="null">Select</option>
-          <option v-for="material in filteredMaterialsEquipmentPaper" :key="material.id" :value="material.id">{{ material.dekel_code }}</option>
-        </select>
+        <input list="paper-datalist" v-model="selectedJob.paper_id">
+        <datalist id="paper-datalist">
+          <option v-for="material in filteredMaterialsEquipmentPaper" :key="material.id">{{ material.dekel_code }}</option>
+        </datalist>
         <label>PRINTER:</label>
-        <select v-model="selectedJob.printer_id">
-          <option :value="null">Select</option>
-          <option v-for="material in materialsEquipment" :key="material.id" :value="material.id">{{ material.dekel_code }}</option>
-        </select>
+        <input list="printer-datalist" v-model="selectedJob.printer_id">
+        <datalist id="printer-datalist">
+          <option v-for="material in materialsEquipment" :key="material.id">{{ material.dekel_code }}</option>
+        </datalist>
         <label>KOVERAT vrsta:</label>
-        <select v-model="selectedJob.envelope_id">
-          <option :value="null">Select</option>
-          <option v-for="material in filteredMaterialsEquipmentEnvelope" :key="material.id" :value="material.id">{{ material.dekel_code }}</option>
-        </select>
+        <input list="envelope-datalist" v-model="selectedJob.envelope_id">
+        <datalist id="envelope-datalist">
+          <option v-for="material in filteredMaterialsEquipmentEnvelope" :key="material.id">{{ material.dekel_code }}</option>
+        </datalist>
         <label>KOV PRINTER:</label>
-        <select v-model="selectedJob.envelope_printer_id">
-          <option :value="null">Select</option>
-          <option v-for="material in materialsEquipment" :key="material.id" :value="material.id">{{ material.dekel_code }}</option>
-        </select>
+        <input list="printer_env-datalist" v-model="selectedJob.envelope_printer_id">
+        <datalist id="printer_env-datalist">
+          <option v-for="material in materialsEquipment" :key="material.id">{{ material.dekel_code }}</option>
+        </datalist>
         <label>KOVERTIR:</label>
-        <select v-model="selectedJob.envelope_ps_id">
-          <option :value="null">Select</option>
-          <option v-for="material in filteredMaterialsEquipmentEnvelopePS" :key="material.id" :value="material.id">{{ material.dekel_code }}</option>
-        </select>
+        <input list="printer_env_ps-datalist" v-model="selectedJob.envelope_printer_id">
+        <datalist id="printer_env_ps-datalist">
+          <option v-for="material in filteredMaterialsEquipmentEnvelopePS" :key="material.id">{{ material.dekel_code }}</option>
+        </datalist>
         <label>PS MASINA:</label>
-        <select v-model="selectedJob.ps_machine_id">
-          <option :value="null">Select</option>
-          <option v-for="material in materialsEquipment" :key="material.id" :value="material.id">{{ material.dekel_code }}</option>
-        </select>
+        <input list="ps-datalist" v-model="selectedJob.ps_machine_id">
+        <datalist id="ps-datalist">
+          <option v-for="material in materialsEquipment" :key="material.id">{{ material.dekel_code }}</option>
+        </datalist>
       </div>
       <div class="job-item">
         <label>Qty listova</label>
-        <input type="text" v-model="selectedJob.qty_lists" />
+        <input type="text" v-model="selectedJob.qty_lists" @keydown="preventNonNumericKey" />
+
         <label>Qty stranica</label>
-        <input type="text" v-model="selectedJob.qty_pages" />
+        <input type="text" v-model="selectedJob.qty_pages" @keydown="preventNonNumericKey" />
+
         <label>Qty koverata</label>
-        <input type="text" v-model="selectedJob.qty_envelope" />
+        <input type="text" v-model="selectedJob.qty_envelope" @keydown="preventNonNumericKey" />
+
         <label>Kutija kom.:</label>
-        <input type="text" v-model="selectedJob.qty_boxes" />
-      </div>
+        <input type="text" v-model="selectedJob.qty_boxes" @keydown="preventNonNumericKey" />
+    </div>
     </div>
     
     <div class="operators">
@@ -79,6 +81,11 @@
       <button class="action-btn end-btn" @click="stopJob" :disabled="!isOtherActionsEnabled">
         <font-awesome-icon icon="check" />
       </button>
+      <button data-v-8c8614a6="" class="action-btn close-btn" @click="closeNewJobModal">
+          <svg class="svg-inline--fa fa-times" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="times" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 352 512">
+              <path fill="currentColor" d="M242.72 256l100.07-100.07c12.28-12.28 12.28-32.19 0-44.48l-22.24-22.24c-12.28-12.28-32.19-12.28-44.48 0L176 189.28 75.93 89.21c-12.28-12.28-32.19-12.28-44.48 0L9.21 111.45c-12.28 12.28-12.28 32.19 0 44.48L109.28 256 9.21 356.07c-12.28 12.28-12.28 32.2 0 44.48l22.24 22.24c12.28 12.28 32.2 12.28 44.48 0L176 322.72 276.07 422.79c12.28 12.28 32.2 12.28 44.48 0l22.24-22.24c12.28-12.28 12.28-32.19 0-44.48L242.72 256z"></path>
+          </svg>
+      </button>
     </div>
     
     <div class="footer-icons">
@@ -101,7 +108,7 @@ export default {
     const selectedJob = computed(() => {
       const jobFromStore = store.getSelectedJob;
       if (jobFromStore) {
-        return { ...jobFromStore };
+        return {...jobFromStore};
       }
 
       // If it's null in the store, create a default job
@@ -209,9 +216,6 @@ export default {
 
       // Dispatch the createJob action from your Pinia store
       await store.createJob(newJobData);
-
-      // If you want to instantly reflect the created job in your jobs list:
-      useCodeTablesStore().jobs.push(newJobData);
       
       emit('jobAdded');
       // Close the modal or perform any other action after the job is created successfully.
@@ -230,6 +234,13 @@ export default {
       // Close the modal or perform any other action after the job is created successfully.
       closeNewJobModal();
     };
+
+    const preventNonNumericKey = ($event) => {
+      if(!/^(\d|\b|Tab|ArrowLeft|ArrowRight|Delete)$/.test($event.key)) {
+          $event.preventDefault();
+      }
+    }
+
     return {
       selectedJob,
       clients,
@@ -241,6 +252,8 @@ export default {
       startJob,
       stopJob,
       isJobFromStore,
+      closeNewJobModal,
+      preventNonNumericKey,
     };
   },
   computed: {
@@ -289,8 +302,10 @@ export default {
 }
 
 .actions {
-  display: flex;
-  gap: 1rem;
+    display: flex;
+    justify-content: space-between; /* Add this line to justify the content */
+    gap: 1rem;
+    align-items: center; /* To vertically align items if they have different heights */
 }
 
 .action-btn {
@@ -317,6 +332,15 @@ export default {
 .action-btn:disabled .font-awesome-icon {
     color: inherit;
     cursor: inherit;
+}
+
+.close-btn {
+    margin-left: auto; /* This will push the button to the right */
+    color: #666; /* Color for the close button (change if needed) */
+}
+
+.close-btn .fa-times {
+    color: inherit; /* Ensure the icon inherits the color from the button */
 }
 
 .start-btn .fa-play,

@@ -26,7 +26,7 @@
         <tbody>
           <!-- Iterate through jobs from the store and display them in rows -->
           <tr v-for="job in jobs" :key="job.jobid" @click="openJobModal(job)">
-            <td>{{ getClientName(job.client_id) }}</td>
+            <td>{{ job.client_id }}</td>
             <td>{{ getOperaterName(job.operater_id) }}</td>
             <td>{{ formatDate(job.job_date) }}</td>
             <td>{{ formatTime(job.start_time) }}</td>
@@ -52,12 +52,6 @@ export default {
   setup() {
     const store = useCodeTablesStore();
     const jobs = computed(() => store.jobs);
-
-    // Define a computed property to map client_id to client_name
-    const getClientName = (client_id) => {
-      const client = store.clients.find((c) => c.id === client_id);
-      return client ? client.client_name : ''; // Return the client_name or an empty string
-    };
 
     // Define a computed property to map operater_id to username
     const getOperaterName = (operater_id) => {
@@ -119,7 +113,6 @@ export default {
 
     return {
       jobs,
-      getClientName,
       getOperaterName,
       getStatusName,
       formatDate,
@@ -139,9 +132,9 @@ export default {
     // No need to fetch jobs here, they are already fetched and stored in the store
   },
   methods: {
-    refreshJobsList() {
-      // logic to fetch and refresh the list of jobs goes here (if needed)
-      // Since jobs are reactive, you may not need to manually refresh here
+    async refreshJobsList() {
+      const store = useCodeTablesStore();
+      await store.fetchJobs();
     },
     openNewJobModal() {
       this.showModal = true; // Show the modal when the "Add Job" button is clicked

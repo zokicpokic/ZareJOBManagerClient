@@ -70,6 +70,7 @@ export const useCodeTablesStore = defineStore('codeTables', {
       try {
         // Call your service function to create a new job
         const createdJob = await codeTablesService.createJob(newJobData);
+        this.jobs.push(createdJob);
         return createdJob;
       } catch (error) {
         console.error('Error creating job:', error);
